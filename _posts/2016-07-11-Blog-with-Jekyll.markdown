@@ -3,6 +3,7 @@ layout: post
 title: "Blog with Jekyll"
 date: 2016-07-11 09:30:00 +1200
 categories: blog
+comments: true
 ---
 [Github pages][github-pages] integrates with [Jekyll][jekyll-homepage] really well. So I thought I'd give it a go and see how easy it is.
 

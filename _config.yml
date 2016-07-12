@@ -20,3 +20,6 @@ markdown: kramdown
 
 #Google services
 google_analytics: UA-80655492-1
+
+# Disqus post comments
+disqus_shortname: tomosewe
