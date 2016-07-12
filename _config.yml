@@ -17,3 +17,6 @@ github_username:  tomosewe
 
 # Build settings
 markdown: kramdown
+
+#Google services
+google_analytics: UA-80655492-1
