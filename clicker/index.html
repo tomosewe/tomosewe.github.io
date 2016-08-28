@@ -7,6 +7,7 @@
     <title>Clicker</title>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
         crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../css/clicker.css">
     <script type="text/javascript" src="../js/clicker.js"></script>
 </head>
@@ -15,7 +16,16 @@
     <header>
         <h1>Clicker</h1>
     </header>
-    <button id="js-clicker-button">Click Me</button>
+    <button class="super-big-button btn btn-primary" id="js-clicker-button">Click Me</button>
+    <button id="js-click-power">2x</button>
+    <div>Click power: <span id="js-click-power-display">1</span>x</div>
+
+    <div>Number of clicks: <span id="js-click-display">0</span></div>
+    <button id="js-buy-clickers">
+        Buy more spoons! Cost: 
+        <span id="js-spoon-cost"></span>
+    </button>
+    <div>Number of spoons: <span id="js-helperspoons-display">0</span></div>
 
 
 </body>
