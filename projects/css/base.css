@@ -2,3 +2,7 @@ body {
     padding: 0;
     margin: 0;
 }
+
+.game-canvas {
+    padding: 50px;
+}
