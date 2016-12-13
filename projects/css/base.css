@@ -3,6 +3,10 @@ body {
     margin: 0;
 }
 
+h1 {
+    padding: 20px;
+}
+
 .game-canvas {
-    padding: 50px;
+    padding: 0 50px;
 }
