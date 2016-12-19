@@ -38,3 +38,7 @@ function keyPressed() {
         bird.up();
     }
 }
+
+function touchStarted() {
+    bird.up();
+}
