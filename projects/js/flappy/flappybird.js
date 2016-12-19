@@ -39,10 +39,6 @@ function keyPressed() {
     }
 }
 
-function touchStarted() {
+function mousePressed() {
     bird.up();
-}
-
-function touchEnded() {
-    return false;
 }
