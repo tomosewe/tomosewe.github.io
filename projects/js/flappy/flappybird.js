@@ -41,5 +41,8 @@ function keyPressed() {
 
 function touchStarted() {
     bird.up();
+}
+
+function touchEnded() {
     return false;
 }
