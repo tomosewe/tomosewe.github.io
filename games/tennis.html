@@ -132,22 +132,22 @@
     }
 
     function drawNet() {
-      for(var i = 0; i < canvas.height; i+=40) {
+      for (var i = 0; i < canvas.height; i += 40) {
         colorRect((canvas.width / 2) - 1, i, 2, 20, 'white');
       }
     }
 
     function drawEverything() {
       // next line blanks out the screen with black
-      colorRect(0, 0, canvas.width, canvas.height, 'black');      
+      colorRect(0, 0, canvas.width, canvas.height, 'black');
 
       if (showingWinScreen) {
         canvasContext.fillStyle = 'white';
         if (player1Score >= WINNING_SCORE) {
           canvasContext.fillText('Left Player Won!', canvas.width / 2, 200);
-        } else if(player2Score >= WINNING_SCORE) {
+        } else if (player2Score >= WINNING_SCORE) {
           canvasContext.fillText('Right Player Won!', canvas.width / 2, 200);
-        }        
+        }
         canvasContext.fillText('Click to continue', canvas.width / 2, 500);
         return;
       }
