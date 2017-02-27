@@ -4,25 +4,28 @@ const TRACK_COLS = 20;
 const TRACK_ROWS = 15;
 
 var trackGrid =
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  [4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
+    4, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
     1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
-    1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1,
-    1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1,
-    1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
+    1, 0, 0, 0, 1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 0, 0, 1,
+    1, 0, 0, 1, 1, 0, 0, 1, 4, 4, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1,
+    1, 0, 0, 1, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
     1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
-    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-    1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-    1, 0, 2, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-    1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1, 0, 0, 1,
+    1, 0, 0, 1, 0, 0, 5, 0, 0, 0, 5, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+    1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1,
+    1, 1, 5, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
+    0, 3, 0, 0, 0, 0, 1, 4, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
+    0, 3, 0, 0, 0, 0, 1, 4, 4, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
+    1, 1, 5, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1];
 
 const TRACK_ROAD = 0;
 const TRACK_WALL = 1;
 const TRACK_PLAYER = 2;
+const TRACK_GOAL = 3;
+const TRACK_TREE = 4;
+const TRACK_FLAG = 5;
 
 function trackTileToIndex(tileCol, tileRow) {
   return (tileCol + TRACK_COLS * tileRow);
@@ -57,12 +60,30 @@ function drawTracks() {
     for (var eachRow = 0; eachRow < TRACK_ROWS; eachRow++) { // in each row within that col
       var trackLeftEdgeX = eachCol * TRACK_W;
       var trackTopEdgeY = eachRow * TRACK_H;
-      if (isWallAtTileCoord(eachCol, eachRow)) {
-        canvasContext.drawImage(trackPicWall, trackLeftEdgeX, trackTopEdgeY);
-      } else {
-        canvasContext.drawImage(trackPicRoad, trackLeftEdgeX, trackTopEdgeY);
-      }
 
+      var trackIndex = trackTileToIndex(eachCol, eachRow);
+      var trackTypeHere = trackGrid[trackIndex];
+      var useImg;
+
+      switch (trackTypeHere) {
+        case TRACK_ROAD:
+          useImg = trackPicRoad;
+          break;
+        case TRACK_WALL:
+          useImg = trackPicWall;
+          break;
+        case TRACK_GOAL:
+          useImg = trackPicGoal;
+          break;
+        case TRACK_TREE:
+          useImg = trackPicTree;
+          break;
+        case TRACK_FLAG:
+        default:
+          useImg = trackPicFlag;
+          break;          
+      }
+      canvasContext.drawImage(useImg, trackLeftEdgeX, trackTopEdgeY);
     } // end of for eachRow
   } // end of for eachCol
 } // end of drawTracks()
