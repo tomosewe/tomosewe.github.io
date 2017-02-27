@@ -1,6 +1,5 @@
 const TRACK_W = 40;
 const TRACK_H = 40;
-const TRACK_GAP = 1;
 const TRACK_COLS = 20;
 const TRACK_ROWS = 15;
 
@@ -20,7 +19,7 @@ var trackGrid =
     1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
     1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-    
+
 const TRACK_ROAD = 0;
 const TRACK_WALL = 1;
 const TRACK_PLAYER = 2;
@@ -56,13 +55,12 @@ function checkForTrackAtPixelCoord(pixelX, pixelY) {
 function drawTracks() {
   for (var eachCol = 0; eachCol < TRACK_COLS; eachCol++) { // in each column...
     for (var eachRow = 0; eachRow < TRACK_ROWS; eachRow++) { // in each row within that col
-
+      var trackLeftEdgeX = eachCol * TRACK_W;
+      var trackTopEdgeY = eachRow * TRACK_H;
       if (isWallAtTileCoord(eachCol, eachRow)) {
-        var trackLeftEdgeX = eachCol * TRACK_W;
-        var trackTopEdgeY = eachRow * TRACK_H;
-        // draw a blue rectangle at that position, leaving a small margin for TRACK_GAP
-        colorRect(trackLeftEdgeX, trackTopEdgeY,
-          TRACK_W - TRACK_GAP, TRACK_H - TRACK_GAP, 'blue');
+        canvasContext.drawImage(trackPicWall, trackLeftEdgeX, trackTopEdgeY);
+      } else {
+        canvasContext.drawImage(trackPicRoad, trackLeftEdgeX, trackTopEdgeY);
       }
 
     } // end of for eachRow

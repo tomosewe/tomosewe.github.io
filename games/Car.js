@@ -9,15 +9,7 @@ const REVERSE_POWER = 0.2;
 const TURN_RATE = 0.03;
 const MIN_TURN_SPEED = 0.5;
 
-var carPic = document.createElement("img");
-var carPicLoaded = false;
-
 function carInit() {
-  // load car image  
-  carPic.onload = function () {
-    carPicLoaded = true;
-  }
-  carPic.src = "player1.png";
   carReset();
 }
 
@@ -67,7 +59,5 @@ function carMove() {
 }
 
 function carDraw() {
-  if (carPicLoaded) {
-    drawBitmapCenteredAtLocationWithRotation(carPic, carX, carY, carAng);
-  }
+  drawBitmapCenteredAtLocationWithRotation(carPic, carX, carY, carAng);
 }
