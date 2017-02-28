@@ -12,7 +12,7 @@ var trackGrid =
     1, 0, 0, 1, 1, 0, 0, 1, 4, 4, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1,
     1, 0, 0, 1, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
     1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
-    1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1, 0, 0, 1,
+    1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1, 0, 0, 1,
     1, 0, 0, 1, 0, 0, 5, 0, 0, 0, 5, 0, 0, 1, 0, 0, 1, 0, 0, 1,
     1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1,
     1, 1, 5, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
@@ -56,34 +56,17 @@ function checkForTrackAtPixelCoord(pixelX, pixelY) {
 }
 
 function drawTracks() {
-  for (var eachCol = 0; eachCol < TRACK_COLS; eachCol++) { // in each column...
-    for (var eachRow = 0; eachRow < TRACK_ROWS; eachRow++) { // in each row within that col
-      var trackLeftEdgeX = eachCol * TRACK_W;
-      var trackTopEdgeY = eachRow * TRACK_H;
-
-      var trackIndex = trackTileToIndex(eachCol, eachRow);
+  var trackIndex = 0;
+  var trackLeftEdgeX = 0;
+  var trackTopEdgeY = 0;
+  for (var eachRow = 0; eachRow < TRACK_ROWS; eachRow++) {
+    trackLeftEdgeX = 0;
+    for (var eachCol = 0; eachCol < TRACK_COLS; eachCol++) {       
       var trackTypeHere = trackGrid[trackIndex];
-      var useImg;
-
-      switch (trackTypeHere) {
-        case TRACK_ROAD:
-          useImg = trackPicRoad;
-          break;
-        case TRACK_WALL:
-          useImg = trackPicWall;
-          break;
-        case TRACK_GOAL:
-          useImg = trackPicGoal;
-          break;
-        case TRACK_TREE:
-          useImg = trackPicTree;
-          break;
-        case TRACK_FLAG:
-        default:
-          useImg = trackPicFlag;
-          break;          
-      }
-      canvasContext.drawImage(useImg, trackLeftEdgeX, trackTopEdgeY);
-    } // end of for eachRow
-  } // end of for eachCol
-} // end of drawTracks()
+      canvasContext.drawImage(trackPics[trackTypeHere], trackLeftEdgeX, trackTopEdgeY);
+      trackIndex++;
+      trackLeftEdgeX += TRACK_W;    
+    } 
+    trackTopEdgeY += TRACK_H;
+  } 
+} 
