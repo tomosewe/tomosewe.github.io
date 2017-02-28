@@ -18,8 +18,8 @@ function loadingDoneSoStartGame() {
     drawEverything();
   }, 1000 / framesPerSecond);
 
-  player2.carInit(car2Pic);
-  player1.carInit(carPic);
+  player2.carInit(car2Pic, "Green Car");
+  player1.carInit(carPic, "Blue Car");
   initInput();
 }
 
