@@ -1,7 +1,6 @@
 var canvas;
 var canvasContext;
-var player1 = new carClass();
-var player2 = new carClass();
+var player1 = new warriorClass();
 
 window.onload = function () {
   canvas = document.getElementById('gameCanvas');
@@ -18,18 +17,15 @@ function loadingDoneSoStartGame() {
     drawEverything();
   }, 1000 / framesPerSecond);
 
-  player2.carInit(car2Pic, "Green Car");
-  player1.carInit(carPic, "Blue Car");
+  player1.init(playerPic, "Blue Car");
   initInput();
 }
 
 function moveEverything() {
-  player1.carMove();
-  player2.carMove();
+  player1.move();
 }
 
 function drawEverything() {  
-  drawTracks();
-  player1.carDraw(); 
-  player2.carDraw(); 
+  drawRoom();
+  player1.draw(); 
 }
