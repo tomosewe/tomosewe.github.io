@@ -20,6 +20,7 @@ function warriorClass() {
   }
 
   this.reset = function () {
+    this.keysHeld = 0;
     this.x = 75
     this.y = 75;
     this.speed = 0;
@@ -58,14 +59,37 @@ function warriorClass() {
       nextX -= PLAYER_MOVE_SPEED;
     }
 
-    var walkingIntoTileType = getTileAtPixelCoord(nextX, nextY);
+    var walkingIntoTileTypeIndex = getTileIndexAtPixelCoord(nextX, nextY);
+    var walkingIntoTileType = TILE_WALL;
 
-    if (walkingIntoTileType == TILE_GROUND) {
-      this.x = nextX;
-      this.y = nextY;
-    } else if (walkingIntoTileType == TILE_GOAL) {
-      document.getElementById("debugText").innerHTML = this.myName + " won";
-      this.reset();
+    if (walkingIntoTileTypeIndex != undefined) {
+      walkingIntoTileType = roomGrid[walkingIntoTileTypeIndex];
+    }
+
+    switch (walkingIntoTileType) {
+      case TILE_GROUND:
+        this.x = nextX;
+        this.y = nextY;
+        break;
+      case TILE_GOAL:
+        document.getElementById("debugText").innerHTML = this.myName + " won";
+        this.reset();
+        break;
+      case TILE_DOOR:
+        if (this.keysHeld > 0) {
+          this.keysHeld--;
+          document.getElementById("debugText").innerHTML = "Keys: " + this.keysHeld;
+          roomGrid[walkingIntoTileTypeIndex] = TILE_GROUND;
+        }
+        break;
+      case TILE_KEY:
+        this.keysHeld++;
+        document.getElementById("debugText").innerHTML = "Keys: " + this.keysHeld;
+        roomGrid[walkingIntoTileTypeIndex] = TILE_GROUND;
+        break;
+      case TILE_WALL:
+      default:
+        break;
     }
   }
 

@@ -2,18 +2,18 @@ const ROOM_COLS = 16;
 const ROOM_ROWS = 12;
 
 var roomGrid =
-    [ 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-      4, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
-      1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
-      1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 
-      1, 0, 0, 0, 1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 0, 1, 
-      1, 0, 0, 1, 1, 0, 0, 1, 4, 4, 1, 1, 0, 0, 0, 1, 
-      1, 0, 0, 1, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 1, 
-      1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 
-      1, 2, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 1, 
-      1, 0, 0, 1, 0, 0, 5, 0, 0, 0, 5, 0, 0, 1, 0, 1, 
-      1, 1, 1, 1, 3, 3, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 
-      1, 1, 5, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 1, 1, 1];
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+      1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 1, 1, 1, 1, 
+      1, 0, 4, 0, 4, 0, 1, 0, 2, 0, 1, 0, 1, 4, 4, 1, 
+      1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, 5, 1, 1, 
+      1, 1, 1, 5, 1, 1, 1, 0, 4, 0, 1, 0, 0, 0, 1, 1, 
+      1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4, 0, 1, 1, 
+      1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 
+      1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 0, 1, 1, 
+      1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 
+      1, 0, 5, 0, 5, 0, 5, 0, 3, 0, 1, 1, 1, 1, 1, 1, 
+      1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; 
 
 const TILE_W = 50;
 const TILE_H = 50;
@@ -24,6 +24,12 @@ const TILE_GOAL = 3;
 const TILE_KEY = 4;
 const TILE_DOOR = 5;
 
+function tileTypeHasTransparency(checkTileType) {
+  return (checkTileType == TILE_GOAL ||
+    checkTileType == TILE_KEY ||
+    checkTileType == TILE_DOOR);
+}
+
 function roomTileToIndex(tileCol, tileRow) {
   return (tileCol + ROOM_COLS * tileRow);
 }
@@ -33,7 +39,7 @@ function isWallAtTileCoord(trackTileCol, trackTileRow) {
   return (roomGrid[tileIndex] == 1);
 }
 
-function getTileAtPixelCoord(pixelX, pixelY) {
+function getTileIndexAtPixelCoord(pixelX, pixelY) {
   var tileCol = pixelX / TILE_W;
   var tileRow = pixelY / TILE_H;
 
@@ -43,12 +49,13 @@ function getTileAtPixelCoord(pixelX, pixelY) {
 
   // first check whether the car is within any part of the track wall
   if (tileCol < 0 || tileCol >= ROOM_COLS ||
-      tileRow < 0 || tileRow >= ROOM_ROWS) {
-    return TILE_WALL; // bail out of function to avoid illegal array position usage
-  }  
+    tileRow < 0 || tileRow >= ROOM_ROWS) {
+    document.getElementById("debugText").innerHTML = "out of bounds:" + pixelX + "," + pixelY;
+    return undefined;
+  }
 
   var tileIndex = roomTileToIndex(tileCol, tileRow);
-  return (roomGrid[tileIndex]);
+  return tileIndex;
 }
 
 function drawRoom() {
@@ -57,12 +64,15 @@ function drawRoom() {
   var tileTopEdgeY = 0;
   for (var eachRow = 0; eachRow < ROOM_ROWS; eachRow++) {
     tileLeftEdgeX = 0;
-    for (var eachCol = 0; eachCol < ROOM_COLS; eachCol++) {       
+    for (var eachCol = 0; eachCol < ROOM_COLS; eachCol++) {
       var tileTypeHere = roomGrid[tileIndex];
+      if (tileTypeHasTransparency(tileTypeHere)) {
+        canvasContext.drawImage(tilePics[TILE_GROUND], tileLeftEdgeX, tileTopEdgeY);
+      }
       canvasContext.drawImage(tilePics[tileTypeHere], tileLeftEdgeX, tileTopEdgeY);
       tileIndex++;
-      tileLeftEdgeX += TILE_W;    
-    } 
+      tileLeftEdgeX += TILE_W;
+    }
     tileTopEdgeY += TILE_H;
-  } 
+  }
 } 
