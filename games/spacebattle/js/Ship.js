@@ -1,35 +1,35 @@
-const GROUNDSPEED_DECAY_MULT = 0.94;
-const DRIVE_POWER = 0.5;
-const REVERSE_POWER = 0.2;
+const SPACESPEED_DECAY_MULT = 0.99;
+const THRUST_POWER = 0.15;
 const TURN_RATE = 0.03;
-const MIN_TURN_SPEED = 0.5;
 
 function shipClass() {
   this.x = 75;
   this.y = 75;
 
   this.keyHeld_Gas = false;
-  this.keyHeld_Reverse = false;
   this.keyHeld_TurnLeft = false;
   this.keyHeld_TurnRight = false;
 
-  this.setupControls = function (forwardKey, backKey, leftKey, rightKey) {
+  this.setupControls = function (forwardKey, leftKey, rightKey, shotKey) {
     this.controlKeyForGas = forwardKey;
-    this.controlKeyForReverse = backKey;
     this.controlKeyForTurnLeft = leftKey;
     this.controlKeyForTurnRight = rightKey;
+    this.controlKeyForShotFire = shotKey;
   }
 
   this.init = function (whichGraphic) {
+    this.myShot = new shotClass();
     this.myBitmap = whichGraphic;
     this.reset();
   }
 
   this.reset = function () {
+    this.driftX = 0.0;
+    this.driftY = 0.0;
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
-    this.speed = 0;
     this.ang = -0.5 * Math.PI;
+    this.myShot.reset();
   }
 
   this.handleScreenWrap = function () {
@@ -48,32 +48,39 @@ function shipClass() {
   }
 
   this.move = function () {
-    if (Math.abs(this.speed) > MIN_TURN_SPEED) {
-      if (this.keyHeld_TurnLeft) {
-        this.ang -= TURN_RATE * Math.PI;
-      }
+    if (this.keyHeld_TurnLeft) {
+      this.ang -= TURN_RATE * Math.PI;
+    }
 
-      if (this.keyHeld_TurnRight) {
-        this.ang += TURN_RATE * Math.PI;
-      }
+    if (this.keyHeld_TurnRight) {
+      this.ang += TURN_RATE * Math.PI;
     }
 
     if (this.keyHeld_Gas) {
-      this.speed += DRIVE_POWER;
-    }
-    if (this.keyHeld_Reverse) {
-      this.speed -= REVERSE_POWER;
+      this.driftX += Math.cos(this.ang) * THRUST_POWER;
+      this.driftY += Math.cos(this.ang) * THRUST_POWER;
     }
 
-    this.x += Math.cos(this.ang) * this.speed;
-    this.y += Math.sin(this.ang) * this.speed;
+    this.x += this.driftX;
+    this.y += this.driftY;
 
-    this.speed *= GROUNDSPEED_DECAY_MULT;
     this.handleScreenWrap();
+
+    this.driftX *= SPACESPEED_DECAY_MULT;
+    this.driftY *= SPACESPEED_DECAY_MULT;
+
+    this.myShot.move();
   }
 
   this.draw = function () {
+    this.myShot.draw();
     drawBitmapCenteredAtLocationWithRotation(this.myBitmap, this.x, this.y, this.ang);
+  }
+
+  this.cannonFire = function () {
+    if (this.myShot.isShotReadyToFire()) {
+      this.myShot.shootFrom(this);
+    }
   }
 
 } 
