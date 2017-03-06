@@ -1,11 +1,19 @@
 const UFO_SPEED = 1.9;
 const UFO_TIME_BETWEEN_CHANGE_DIR = 85;
+const UFO_COLLISION_RADIUS = 13;
 
 ufoClass.prototype = new movingWrapPositionClass();
 function ufoClass() {
   this.init = function (whichGraphic) {
     this.myBitmap = whichGraphic;
     this.reset();
+  } 
+
+  this.isOverlappingPoint = function(testX, testY) {
+    var deltaX = testX - this.x;
+    var deltaY = testY - this.y
+    var dist = Math.sqrt((deltaX*deltaX) + (deltaY * deltaY));
+    return (dist <= UFO_COLLISION_RADIUS);
   }
 
   this.superclassReset = this.reset;

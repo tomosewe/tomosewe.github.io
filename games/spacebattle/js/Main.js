@@ -27,10 +27,12 @@ function loadingDoneSoStartGame() {
 function moveEverything() {
   p1.move();
   enemy.move();
+  p1.checkMyShipAndShotCollisionAgainst(enemy);
 }
 
 function drawEverything() {  
   colorRect(0, 0, canvas.width, canvas.height, 'black');
+  
   p1.draw();
-  enemy.draw();
+  enemy.draw();  
 }

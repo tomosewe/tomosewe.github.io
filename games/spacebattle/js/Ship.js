@@ -30,6 +30,24 @@ function shipClass() {
     this.myShot.reset();
   }
 
+  this.cannonFire = function () {
+    if (this.myShot.isShotReadyToFire()) {
+      this.myShot.shootFrom(this);
+    }
+  }
+
+  this.checkMyShipAndShotCollisionAgainst = function(thisEnemy) {
+    if (thisEnemy.isOverlappingPoint(this.x, this.y)) {
+      this.reset();
+      document.getElementById("debugText").innerHTML = "Player Crashed!";
+    }
+    if (this.myShot.hitTest(thisEnemy)) {
+      thisEnemy.reset();
+      this.myShot.reset();
+      document.getElementById("debugText").innerHTML = "Enemy Blasted!";
+    }
+  }
+
   this.superclassMove = this.move;
   this.move = function () {
     if (this.keyHeld_TurnLeft) {
@@ -42,7 +60,7 @@ function shipClass() {
 
     if (this.keyHeld_Gas) {
       this.xv += Math.cos(this.ang) * THRUST_POWER;
-      this.yv += Math.cos(this.ang) * THRUST_POWER;
+      this.yv += Math.sin(this.ang) * THRUST_POWER;
     }
 
     this.superclassMove();
@@ -53,15 +71,11 @@ function shipClass() {
     this.myShot.move();
   }
 
+
   this.draw = function () {
     this.myShot.draw();
     drawBitmapCenteredAtLocationWithRotation(this.myBitmap, this.x, this.y, this.ang);
   }
 
-  this.cannonFire = function () {
-    if (this.myShot.isShotReadyToFire()) {
-      this.myShot.shootFrom(this);
-    }
-  }
 
 } 
