@@ -1,4 +1,5 @@
 var playerPic = document.createElement("img");
+var UFOPic = document.createElement("img");
 var picsToLoad = 0;
 
 function countLoadedImageAndLaunchIfReady() {
@@ -15,7 +16,8 @@ function beginLoadingImage(imgVar, fileName) {
 
 function loadImages() {
   var imageList = [
-    { varName: playerPic, theFile: "player1.png" }
+    { varName: playerPic, theFile: "player1.png" },
+    { varName: UFOPic, theFile: "ufo.png"}
   ];
 
   picsToLoad = imageList.length;

@@ -2,6 +2,7 @@
 var canvas, canvasContext;
 
 var p1 = new shipClass();
+var enemy = new ufoClass();
 
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
@@ -19,14 +20,17 @@ function loadingDoneSoStartGame() {
     }, 1000/framesPerSecond);
   
   p1.init(playerPic);
+  enemy.init(UFOPic);
   initInput();  
 }
 
 function moveEverything() {
   p1.move();
+  enemy.move();
 }
 
 function drawEverything() {  
   colorRect(0, 0, canvas.width, canvas.height, 'black');
   p1.draw();
+  enemy.draw();
 }
