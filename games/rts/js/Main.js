@@ -1,10 +1,11 @@
-// save the canvas for dimensions, and its 2d context for drawing to it
+const PLAYER_START_UNITS = 8;
+
 var canvas, canvasContext;
-var testUnit = new unitClass();
+var playerUnits = [];
 
 window.onload = function () {
   canvas = document.getElementById('gameCanvas');
-  canvasContext = canvas.getContext('2d');  
+  canvasContext = canvas.getContext('2d');
 
   // these next few lines set up our game logic and render to happen 30 times per second
   var framesPerSecond = 30;
@@ -17,13 +18,18 @@ window.onload = function () {
     var mousePos = calculateMousePos(evt);
     document.getElementById("debugText").innerHTML = "(" + mousePos.x + "," + mousePos.y + ")";
   });
-  canvas.addEventListener('click', function(evt) {
+  canvas.addEventListener('click', function (evt) {
     var mousePos = calculateMousePos(evt);
-    testUnit.gotoX = mousePos.x;
-    testUnit.gotoY = mousePos.y;
+    for (var i = 0; i < playerUnits.length; i++) {
+      playerUnits[i].gotoNear(mousePos.x, mousePos.y);
+    }
   });
 
-  testUnit.reset();
+  for (var i = 0; i < PLAYER_START_UNITS; i++) {
+    var spawnUnit = new unitClass();
+    spawnUnit.reset();
+    playerUnits.push(spawnUnit);
+  }
 }
 
 function calculateMousePos(evt) {
@@ -39,11 +45,16 @@ function calculateMousePos(evt) {
 }
 
 function moveEverything() {
-  testUnit.move();
+  for (var i = 0; i < playerUnits.length; i++) {
+    playerUnits[i].move();
+  }
 }
 
 function drawEverything() {
   // clear the game view by filling it with black
   colorRect(0, 0, canvas.width, canvas.height, 'black');
-  testUnit.draw();
+
+  for (var i = 0; i < playerUnits.length; i++) {
+    playerUnits[i].draw();
+  }
 }
