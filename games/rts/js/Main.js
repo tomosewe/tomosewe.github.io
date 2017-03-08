@@ -1,7 +1,13 @@
 const PLAYER_START_UNITS = 8;
 
 var canvas, canvasContext;
+var lassoX1 = 0;
+var lassoX2 = 0;
+var lassoY1 = 0;
+var lassoY2 = 0;
+var isMouseDragging = false;
 var playerUnits = [];
+var selectedUnits = [];
 
 window.onload = function () {
   canvas = document.getElementById('gameCanvas');
@@ -16,14 +22,41 @@ window.onload = function () {
 
   canvas.addEventListener('mousemove', function (evt) {
     var mousePos = calculateMousePos(evt);
-    document.getElementById("debugText").innerHTML = "(" + mousePos.x + "," + mousePos.y + ")";
+    if (isMouseDragging) {
+      lassoX2 = mousePos.x;
+      lassoY2 = mousePos.y;
+    }
   });
-  canvas.addEventListener('click', function (evt) {
+
+  canvas.addEventListener('mousedown', function (evt) {
+    var mousePos = calculateMousePos(evt);
+    lassoX1 = mousePos.x;
+    lassoY1 = mousePos.y;
+    lassoX2 = lassoX1;
+    lassoY2 = lassoY1;
+    isMouseDragging = true;
+  });
+
+  canvas.addEventListener('mouseup', function (evt) {
+    var mousePos = calculateMousePos(evt);
+    isMouseDragging = false;
+
+    selectedUnits = [];
+    for (var i = 0; i < playerUnits.length; i++) {
+      if (playerUnits[i].isInBox(lassoX1, lassoY1, lassoX2, lassoY2)) {
+        selectedUnits.push(playerUnits[i]);
+      }
+    }
+    document.getElementById("debugText").innerHTML = "Selected " + selectedUnits.length + " units";
+
+  });
+
+  /*canvas.addEventListener('click', function (evt) {
     var mousePos = calculateMousePos(evt);
     for (var i = 0; i < playerUnits.length; i++) {
       playerUnits[i].gotoNear(mousePos.x, mousePos.y);
     }
-  });
+  });*/
 
   for (var i = 0; i < PLAYER_START_UNITS; i++) {
     var spawnUnit = new unitClass();
@@ -56,5 +89,13 @@ function drawEverything() {
 
   for (var i = 0; i < playerUnits.length; i++) {
     playerUnits[i].draw();
+  }
+
+  for (var i = 0; i < selectedUnits.length; i++) {
+    selectedUnits[i].drawSelectionBox();
+  }
+
+  if (isMouseDragging) {
+    coloredOutlineRectCornerToCorner(lassoX1, lassoY1, lassoX2, lassoY2, 'yellow');
   }
 }

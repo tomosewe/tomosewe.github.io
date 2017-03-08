@@ -1,4 +1,5 @@
 const UNIT_PLACEHOLDER_RADIUS = 5;
+const UNIT_SELECT_DIM_HALF = UNIT_PLACEHOLDER_RADIUS + 3;
 const UNIT_PIXELS_MOVE_RATE = 2;
 const UNIT_MAX_RAND_DIST_FROM_WALK_TARGET = 50;
 
@@ -12,6 +13,14 @@ function unitClass() {
     this.dead = false;
   }
 
+  this.drawSelectionBox = function () {
+    coloredOutlineRectCornerToCorner(
+      this.x - UNIT_SELECT_DIM_HALF,
+      this.y - UNIT_SELECT_DIM_HALF,
+      this.x + UNIT_SELECT_DIM_HALF,
+      this.y + UNIT_SELECT_DIM_HALF, 'green');
+  }
+
   this.draw = function () {
     if (!this.dead) {
       colorCircle(this.x, this.y, UNIT_PLACEHOLDER_RADIUS, 'white');
@@ -21,6 +30,22 @@ function unitClass() {
   this.gotoNear = function (aroundX, aroundY) {
     this.gotoX = aroundX + Math.random() * UNIT_MAX_RAND_DIST_FROM_WALK_TARGET;
     this.gotoY = aroundY + Math.random() * UNIT_MAX_RAND_DIST_FROM_WALK_TARGET;
+  }
+
+  this.isInBox = function (leftX, topY, rightX, bottomY) {
+    if (this.x < leftX) {
+      return false;
+    }
+    if (this.Y < topY) {
+      return false;
+    }
+    if (this.x > rightX) {
+      return false;
+    }
+    if (this.Y > bottomY) {
+      return false;
+    }
+    return true;
   }
 
   this.move = function () {
