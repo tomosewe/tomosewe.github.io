@@ -1,4 +1,5 @@
 const PLAYER_START_UNITS = 8;
+const MIN_DIST_TO_COUNT_DRAG = 10;
 
 var canvas, canvasContext;
 var lassoX1 = 0;
@@ -38,25 +39,25 @@ window.onload = function () {
   });
 
   canvas.addEventListener('mouseup', function (evt) {
-    var mousePos = calculateMousePos(evt);
     isMouseDragging = false;
 
-    selectedUnits = [];
-    for (var i = 0; i < playerUnits.length; i++) {
-      if (playerUnits[i].isInBox(lassoX1, lassoY1, lassoX2, lassoY2)) {
-        selectedUnits.push(playerUnits[i]);
+    if (mouseMovedEnoughToTreatAsDrag()) {
+      selectedUnits = [];
+      for (var i = 0; i < playerUnits.length; i++) {
+        if (playerUnits[i].isInBox(lassoX1, lassoY1, lassoX2, lassoY2)) {
+          selectedUnits.push(playerUnits[i]);
+        }
       }
+      document.getElementById("debugText").innerHTML = "Selected " + selectedUnits.length + " units";
+    } else {
+      var mousePos = calculateMousePos(evt);
+      for (var i = 0; i < selectedUnits.length; i++) {
+        selectedUnits[i].gotoNear(mousePos.x, mousePos.y);
+      }
+      document.getElementById("debugText").innerHTML =
+        "Moving to (" + mousePos.x + "," + mousePos.y + ")";
     }
-    document.getElementById("debugText").innerHTML = "Selected " + selectedUnits.length + " units";
-
   });
-
-  /*canvas.addEventListener('click', function (evt) {
-    var mousePos = calculateMousePos(evt);
-    for (var i = 0; i < playerUnits.length; i++) {
-      playerUnits[i].gotoNear(mousePos.x, mousePos.y);
-    }
-  });*/
 
   for (var i = 0; i < PLAYER_START_UNITS; i++) {
     var spawnUnit = new unitClass();
@@ -75,6 +76,13 @@ function calculateMousePos(evt) {
     x: mouseX,
     y: mouseY
   };
+}
+
+function mouseMovedEnoughToTreatAsDrag() {
+  var deltaX = lassoX1 - lassoX2;
+  var deltaY = lassoY1 - lassoY2;
+  var dragDist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  return (dragDist > MIN_DIST_TO_COUNT_DRAG);
 }
 
 function moveEverything() {

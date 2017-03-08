@@ -32,7 +32,25 @@ function unitClass() {
     this.gotoY = aroundY + Math.random() * UNIT_MAX_RAND_DIST_FROM_WALK_TARGET;
   }
 
-  this.isInBox = function (leftX, topY, rightX, bottomY) {
+  this.isInBox = function (x1, y1, x2, y2) {
+    var leftX, rightX;
+    if (x1 < x2) {
+      leftX = x1;
+      rightX = x2;
+    } else {
+      leftX = x2;
+      rightX = x1;
+    }
+
+    var topY, bottomY;
+    if (y1 < y2) {
+      topY = y1;
+      bottomY = y2;
+    } else {
+      topY = y2;
+      bottomY = y1;
+    }
+
     if (this.x < leftX) {
       return false;
     }
