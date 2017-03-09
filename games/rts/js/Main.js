@@ -1,4 +1,4 @@
-const PLAYER_START_UNITS = 8;
+const PLAYER_START_UNITS = 20;
 const MIN_DIST_TO_COUNT_DRAG = 10;
 
 var canvas, canvasContext;
@@ -51,8 +51,9 @@ window.onload = function () {
       document.getElementById("debugText").innerHTML = "Selected " + selectedUnits.length + " units";
     } else {
       var mousePos = calculateMousePos(evt);
+      var unitsAlongSide = Math.floor(Math.sqrt(selectedUnits.length+2));
       for (var i = 0; i < selectedUnits.length; i++) {
-        selectedUnits[i].gotoNear(mousePos.x, mousePos.y);
+        selectedUnits[i].gotoNear(mousePos.x, mousePos.y,i, unitsAlongSide);
       }
       document.getElementById("debugText").innerHTML =
         "Moving to (" + mousePos.x + "," + mousePos.y + ")";
