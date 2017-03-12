@@ -1,5 +1,7 @@
 const PLAYER_START_UNITS = 20;
+const ENEMY_START_UNITS = 15;
 const MIN_DIST_TO_COUNT_DRAG = 10;
+const MIN_DIST_FOR_MOUSE_CLICK_SELECTABLE = 12;
 
 var canvas, canvasContext;
 var lassoX1 = 0;
@@ -8,6 +10,7 @@ var lassoY1 = 0;
 var lassoY2 = 0;
 var isMouseDragging = false;
 var playerUnits = [];
+var enemyUnits = [];
 var selectedUnits = [];
 
 window.onload = function () {
@@ -43,6 +46,7 @@ window.onload = function () {
 
     if (mouseMovedEnoughToTreatAsDrag()) {
       selectedUnits = [];
+
       for (var i = 0; i < playerUnits.length; i++) {
         if (playerUnits[i].isInBox(lassoX1, lassoY1, lassoX2, lassoY2)) {
           selectedUnits.push(playerUnits[i]);
@@ -51,19 +55,32 @@ window.onload = function () {
       document.getElementById("debugText").innerHTML = "Selected " + selectedUnits.length + " units";
     } else {
       var mousePos = calculateMousePos(evt);
-      var unitsAlongSide = Math.floor(Math.sqrt(selectedUnits.length+2));
-      for (var i = 0; i < selectedUnits.length; i++) {
-        selectedUnits[i].gotoNear(mousePos.x, mousePos.y,i, unitsAlongSide);
+      var clickedUnit = getUnitUnderMouse(mousePos);
+
+      if (clickedUnit != null && !clickedUnit.playControlled) {
+        document.getElementById("debugText").innerHTML =
+          "Player commands " + selectedUnits.length + " units to attack!";
+      } else {
+        var unitsAlongSide = Math.floor(Math.sqrt(selectedUnits.length + 2));
+        for (var i = 0; i < selectedUnits.length; i++) {
+          selectedUnits[i].gotoNear(mousePos.x, mousePos.y, i, unitsAlongSide);
+        }
+        document.getElementById("debugText").innerHTML =
+          "Moving to (" + mousePos.x + "," + mousePos.y + ")";
       }
-      document.getElementById("debugText").innerHTML =
-        "Moving to (" + mousePos.x + "," + mousePos.y + ")";
     }
   });
 
   for (var i = 0; i < PLAYER_START_UNITS; i++) {
     var spawnUnit = new unitClass();
-    spawnUnit.reset();
+    spawnUnit.reset(true);
     playerUnits.push(spawnUnit);
+  }
+
+  for (var i = 0; i < ENEMY_START_UNITS; i++) {
+    var spawnUnit = new unitClass();
+    spawnUnit.reset(false);
+    enemyUnits.push(spawnUnit);
   }
 }
 
@@ -86,9 +103,34 @@ function mouseMovedEnoughToTreatAsDrag() {
   return (dragDist > MIN_DIST_TO_COUNT_DRAG);
 }
 
+function getUnitUnderMouse(currentMousePos) {
+  var closestDistanceFoundToMouse = MIN_DIST_FOR_MOUSE_CLICK_SELECTABLE;
+  var closestUnit = null;
+
+  for (var i = 0; i < playerUnits.length; i++) {
+    var pDist = playerUnits[i].distFrom(currentMousePos.x, currentMousePos.y);
+    if (pDist < closestDistanceFoundToMouse) {
+      closestUnit = playerUnits[i];
+      closestDistanceFoundToMouse = pDist;
+    }
+  }
+
+  for (var i = 0; i < enemyUnits.length; i++) {
+    var eDist = enemyUnits[i].distFrom(currentMousePos.x, currentMousePos.y);
+    if (eDist < closestDistanceFoundToMouse) {
+      closestUnit = enemyUnits[i];
+      closestDistanceFoundToMouse = eDist;
+    }
+  }
+  return closestUnit;
+}
+
 function moveEverything() {
   for (var i = 0; i < playerUnits.length; i++) {
     playerUnits[i].move();
+  }
+  for (var i = 0; i < enemyUnits.length; i++) {
+    enemyUnits[i].move();
   }
 }
 
@@ -98,6 +140,10 @@ function drawEverything() {
 
   for (var i = 0; i < playerUnits.length; i++) {
     playerUnits[i].draw();
+  }
+
+  for (var i = 0; i < enemyUnits.length; i++) {
+    enemyUnits[i].draw();
   }
 
   for (var i = 0; i < selectedUnits.length; i++) {

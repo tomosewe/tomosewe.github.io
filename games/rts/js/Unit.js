@@ -5,9 +5,19 @@ const UNIT_RANKS_SPACING = UNIT_PLACEHOLDER_RADIUS * 3;
 
 function unitClass() {
 
-  this.reset = function () {
+  this.reset = function (playerTeam) {
+    this.playerControlled = playerTeam;
     this.x = Math.random() * canvas.width / 4;
     this.y = Math.random() * canvas.height / 4;
+
+    if (!this.playerControlled) {
+      this.x = canvas.width - this.x;
+      this.y = canvas.height - this.y;
+      this.unitColor = 'red';
+    } else {
+      this.unitColor = 'white';
+    }
+
     this.gotoX = this.x;
     this.gotoY = this.y;
     this.dead = false;
@@ -23,7 +33,7 @@ function unitClass() {
 
   this.draw = function () {
     if (!this.dead) {
-      colorCircle(this.x, this.y, UNIT_PLACEHOLDER_RADIUS, 'white');
+      colorCircle(this.x, this.y, UNIT_PLACEHOLDER_RADIUS, this.unitColor);
     }
   }
 
@@ -66,6 +76,12 @@ function unitClass() {
       return false;
     }
     return true;
+  }
+
+  this.distFrom = function (otherX, otherY) {
+    var deltaX = otherX - this.x;
+    var deltaY = otherY - this.y;
+    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
   }
 
   this.move = function () {
