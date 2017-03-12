@@ -1,23 +1,60 @@
----
-layout: default
----
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="home">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomos Ewe - Full stack developer - Auckland NZ</title>
+  <meta name="description" content="Tomos Ewe - Full stack developer - Auckland NZ">
+  <meta name="author" description="Tomos Ewe">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oxygen:400,300,700">
+  <link rel="stylesheet" href="css/landing.css">
+  <script src="https://use.fontawesome.com/ce134c9011.js"></script>
+</head>
 
-  <h1 class="page-heading">Posts</h1>
+<body>
 
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+  <div class="content">
+    <h1 class="content__heading">Tomos Ewe</h1>
+    <p class="content__teaser">Full stack developer based in Auckland, New Zealand</p>
 
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
+    <a class="link-icon" href="https://twitter.com/@tomosewe" target="_blank"><i class="link-icon fa fa-twitter" aria-hidden="true"></i>
+    </a>
+    <a class="link-icon" href="https://www.linkedin.com/in/tomos-ewe-b93b4897/" target="_blank">
+      <i class="link-icon fa fa-linkedin" aria-hidden="true"></i>
+    </a>
+    <a class="link-icon" href="https://github.com/tomosewe" target="_blank">
+      <i class="link-icon fa fa-github" aria-hidden="true"></i>
+    </a>
+    <a class="link-icon" href="blog.html">
+      <i class="link-icon fa fa-rss" aria-hidden="true"></i>
+    </a>
+    <a class="link-icon" href="mailto:tomosewe@gmail.com?Subject=FromWebsite" target="_blank">
+      <i class="link-icon fa fa-envelope-o" aria-hidden="true"></i>
+    </a>
+  </div>
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+  <video id="my-video" class="video" muted loop>
+    <source src="media/nightsky.mp4" type="video/mp4">
+  </video>
 
-</div>
+  <script src="js/script.js"></script>
+  <script>
+    (function () {
+      /**
+       * Video element
+       * @type {HTMLElement}
+       */
+      var video = document.getElementById("my-video");
+      /**
+       * Check if video can play, and play it
+       */
+      video.addEventListener("canplay", function () {
+        video.play();
+      });
+    })();
+  </script>
+
+</body>
+
+</html>

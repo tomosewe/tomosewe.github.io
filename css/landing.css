@@ -1,0 +1,96 @@
+/* =============================================================================
+  RESETS
+============================================================================= */
+html,
+body,
+div,
+h1,
+p,
+a,
+video {
+  margin: 0;
+  padding: 0;
+}
+
+/* =============================================================================
+  HTML, BODY
+============================================================================= */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-size: 16px;
+  font-family: "Oxygen", sans-serif;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* =============================================================================
+  CONTENT
+============================================================================= */
+.content {
+  position: relative;
+  top: 30%;
+  z-index: 2;
+  margin: 0 auto;
+  max-width: 720px;
+  text-align: center;
+}
+
+.content__heading {
+  margin-bottom: 24px;
+  font-size: 44px;
+}
+
+.content__teaser {
+  margin-bottom: 24px;
+  font-size: 22px;
+}
+
+/* =============================================================================
+  VIDEO
+============================================================================= */
+.video {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+a {
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+    text-decoration: none !important;;
+}
+
+a .link-icon {
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    text-decoration: none !important;;
+    transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+a .link-icon:hover {
+    color: #fff !important;
+    opacity: 1;
+    outline: none !important;
+    text-decoration: none !important;
+    text-shadow: 0 0 1ex #fff, 0 0 4px #fff;
+}
+
+.link-icon {
+    font-size: 32px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+

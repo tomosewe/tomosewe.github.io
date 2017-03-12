@@ -1,4 +1,7 @@
 # tomosewe.github.io
-Website
+Website.
 
-Trying out jekyll
+Always a work in progress.
+
+- Jekyll blog that I never update
+- Some simple games
