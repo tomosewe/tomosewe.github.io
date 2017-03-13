@@ -34,8 +34,11 @@
     </a>
   </div>
 
-  <video id="my-video" class="video" muted loop>
-    <source src="media/nightsky.mp4" type="video/mp4">
+  <video poster="media/nightsky.jpg" id="bg-video" class="video" muted loop>
+    <source src="media/nightsky.webm" type='video/webm; codecs="vp8.0, vorbis"'>
+    <source src="media/nightsky.ogv" type='video/ogg; codecs="theora, vorbis"'>
+    <source src="media/nightsky.mp4" type='video/mp4; codecs="avc1.4D401E, mp4a.40.2"'>
+    <p>Fallback content to cover incompatibility issues</p>
   </video>
 
   <script src="js/script.js"></script>
@@ -45,7 +48,7 @@
        * Video element
        * @type {HTMLElement}
        */
-      var video = document.getElementById("my-video");
+      var video = document.getElementById("bg-video");
       /**
        * Check if video can play, and play it
        */

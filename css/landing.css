@@ -66,6 +66,15 @@ body {
           transform: translate(-50%, -50%);
 }
 
+@media screen and (max-device-width: 800px) {
+    html {
+         background: url(../media/nightsky.jpg) #000 no-repeat center center fixed;
+    }
+    #bg-video {
+        display: none;
+    }
+}
+
 a {
     color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
