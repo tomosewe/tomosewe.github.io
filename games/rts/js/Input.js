@@ -1,16 +1,16 @@
-const MIN_DIST_TO_COUNT_DRAG = 10;
-const MIN_DIST_FOR_MOUSE_CLICK_SELECTABLE = 12;
-
 var lassoX1 = 0;
-var lassoX2 = 0;
 var lassoY1 = 0;
+var lassoX2 = 0;
 var lassoY2 = 0;
 var isMouseDragging = false;
+
+var selectedUnits = [];
+const MIN_DIST_TO_COUNT_DRAG = 10;
+const MIN_DIST_FOR_MOUSE_CLICK_SELECTABLE = 12;
 
 function calculateMousePos(evt) {
   var rect = canvas.getBoundingClientRect(), root = document.documentElement;
 
-  // account for the margins, canvas position on page, scroll amount, etc.
   var mouseX = evt.clientX - rect.left - root.scrollLeft;
   var mouseY = evt.clientY - rect.top - root.scrollTop;
   return {
@@ -45,9 +45,9 @@ function getUnitUnderMouse(currentMousePos) {
       closestDistanceFoundToMouse = eDist;
     }
   }
+
   return closestUnit;
 }
-
 
 function mousemoveHandler(evt) {
   var mousePos = calculateMousePos(evt);
@@ -77,15 +77,20 @@ function mouseupHandler(evt) {
         selectedUnits.push(playerUnits[i]);
       }
     }
-    document.getElementById("debugText").innerHTML = "Selected " + selectedUnits.length + " units";
+    document.getElementById("debugText").innerHTML = "Selected " +
+      selectedUnits.length + " units";
   } else {
     var mousePos = calculateMousePos(evt);
     var clickedUnit = getUnitUnderMouse(mousePos);
 
-    if (clickedUnit != null && !clickedUnit.playControlled) {
+    if (clickedUnit != null && clickedUnit.playerControlled == false) {
+      for (var i = 0; i < selectedUnits.length; i++) {
+        selectedUnits[i].setTarget(clickedUnit);
+      }
       document.getElementById("debugText").innerHTML =
         "Player commands " + selectedUnits.length + " units to attack!";
     } else {
+
       var unitsAlongSide = Math.floor(Math.sqrt(selectedUnits.length + 2));
       for (var i = 0; i < selectedUnits.length; i++) {
         selectedUnits[i].gotoNear(mousePos.x, mousePos.y, i, unitsAlongSide);

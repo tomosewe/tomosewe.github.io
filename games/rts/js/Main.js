@@ -1,17 +1,9 @@
-const PLAYER_START_UNITS = 20;
-const ENEMY_START_UNITS = 15;
-
 var canvas, canvasContext;
-var playerUnits = [];
-var enemyUnits = [];
-var selectedUnits = [];
-
 
 window.onload = function () {
   canvas = document.getElementById('gameCanvas');
   canvasContext = canvas.getContext('2d');
 
-  // these next few lines set up our game logic and render to happen 30 times per second
   var framesPerSecond = 30;
   setInterval(function () {
     moveEverything();
@@ -19,41 +11,26 @@ window.onload = function () {
   }, 1000 / framesPerSecond);
 
   canvas.addEventListener('mousemove', mousemoveHandler);
+
   canvas.addEventListener('mousedown', mousedownHandler);
-  canvas.addEventListener('mouseup', mouseupHandler)
 
-  for (var i = 0; i < PLAYER_START_UNITS; i++) {
-    var spawnUnit = new unitClass();
-    spawnUnit.reset(true);
-    playerUnits.push(spawnUnit);
-  }
+  canvas.addEventListener('mouseup', mouseupHandler);
 
-  for (var i = 0; i < ENEMY_START_UNITS; i++) {
-    var spawnUnit = new unitClass();
-    spawnUnit.reset(false);
-    enemyUnits.push(spawnUnit);
-  }
+  populateTeam(playerUnits, PLAYER_START_UNITS, true);
+  populateTeam(enemyUnits, ENEMY_START_UNITS, false);
 }
 
 function moveEverything() {
-  for (var i = 0; i < playerUnits.length; i++) {
-    playerUnits[i].move();
-  }
-  for (var i = 0; i < enemyUnits.length; i++) {
-    enemyUnits[i].move();
+  for (var i = 0; i < allUnits.length; i++) {
+    allUnits[i].move();
   }
 }
 
 function drawEverything() {
-  // clear the game view by filling it with black
   colorRect(0, 0, canvas.width, canvas.height, 'black');
 
-  for (var i = 0; i < playerUnits.length; i++) {
-    playerUnits[i].draw();
-  }
-
-  for (var i = 0; i < enemyUnits.length; i++) {
-    enemyUnits[i].draw();
+  for (var i = 0; i < allUnits.length; i++) {
+    allUnits[i].draw();
   }
 
   for (var i = 0; i < selectedUnits.length; i++) {

@@ -2,15 +2,17 @@ const UNIT_PLACEHOLDER_RADIUS = 5;
 const UNIT_SELECT_DIM_HALF = UNIT_PLACEHOLDER_RADIUS + 3;
 const UNIT_PIXELS_MOVE_RATE = 2;
 const UNIT_RANKS_SPACING = UNIT_PLACEHOLDER_RADIUS * 3;
+const UNIT_ATTACK_RANGE = 55;
+const UNIT_AI_ATTACK_INITIATE = UNIT_ATTACK_RANGE + 10;
 
 function unitClass() {
-
-  this.reset = function (playerTeam) {
+  this.resetAndSetPlayerTeam = function (playerTeam) {
     this.playerControlled = playerTeam;
     this.x = Math.random() * canvas.width / 4;
     this.y = Math.random() * canvas.height / 4;
+    this.myTarget = null;
 
-    if (!this.playerControlled) {
+    if (this.playerControlled == false) {
       this.x = canvas.width - this.x;
       this.y = canvas.height - this.y;
       this.unitColor = 'red';
@@ -20,21 +22,17 @@ function unitClass() {
 
     this.gotoX = this.x;
     this.gotoY = this.y;
-    this.dead = false;
+    this.isDead = false;
   }
 
-  this.drawSelectionBox = function () {
-    coloredOutlineRectCornerToCorner(
-      this.x - UNIT_SELECT_DIM_HALF,
-      this.y - UNIT_SELECT_DIM_HALF,
-      this.x + UNIT_SELECT_DIM_HALF,
-      this.y + UNIT_SELECT_DIM_HALF, 'green');
+  this.distFrom = function (otherX, otherY) {
+    var deltaX = otherX - this.x;
+    var deltaY = otherY - this.y;
+    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
   }
 
-  this.draw = function () {
-    if (!this.dead) {
-      colorCircle(this.x, this.y, UNIT_PLACEHOLDER_RADIUS, this.unitColor);
-    }
+  this.setTarget = function (newTarget) {
+    this.myTarget = newTarget;
   }
 
   this.gotoNear = function (aroundX, aroundY, formationPos, formationDim) {
@@ -66,25 +64,45 @@ function unitClass() {
     if (this.x < leftX) {
       return false;
     }
-    if (this.Y < topY) {
+    if (this.y < topY) {
       return false;
     }
     if (this.x > rightX) {
       return false;
     }
-    if (this.Y > bottomY) {
+    if (this.y > bottomY) {
       return false;
     }
     return true;
   }
 
-  this.distFrom = function (otherX, otherY) {
-    var deltaX = otherX - this.x;
-    var deltaY = otherY - this.y;
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-  }
-
   this.move = function () {
+    if (this.myTarget != null) {
+      if (this.myTarget.isDead) {
+        this.myTarget = null;
+        this.gotoX = this.x;
+        this.gotoY = this.y;
+      } else if (this.distFrom(this.myTarget.x, this.myTarget.y) > UNIT_ATTACK_RANGE) {
+        this.gotoX = this.myTarget.x;
+        this.gotoY = this.myTarget.y;
+      } else {
+        this.myTarget.isDead = true;
+        this.gotoX = this.x;
+        this.gotoY = this.y;
+      }
+    } else if (this.playerControlled == false) {
+      if (Math.random() < 0.02) {
+        var nearestOpponentFound = findClosestUnitInRange(this.x, this.y, UNIT_AI_ATTACK_INITIATE, playerUnits);
+
+        if (nearestOpponentFound != null) {
+          this.myTarget = nearestOpponentFound;
+        } else {
+          this.gotoX = this.x - Math.random() * 70;
+          this.gotoY = this.y - Math.random() * 70;
+        }
+      }
+    }
+
     var deltaX = this.gotoX - this.x;
     var deltaY = this.gotoY - this.y;
     var distToGo = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -99,4 +117,19 @@ function unitClass() {
       this.y = this.gotoY;
     }
   }
-}
+
+  this.drawSelectionBox = function () {
+    coloredOutlineRectCornerToCorner(this.x - UNIT_SELECT_DIM_HALF,
+      this.y - UNIT_SELECT_DIM_HALF,
+      this.x + UNIT_SELECT_DIM_HALF,
+      this.y + UNIT_SELECT_DIM_HALF,
+      'green');
+  }
+
+  this.draw = function () {
+    if (this.isDead == false) {
+      colorCircle(this.x, this.y, UNIT_PLACEHOLDER_RADIUS, this.unitColor);
+    }
+  }
+
+} 
